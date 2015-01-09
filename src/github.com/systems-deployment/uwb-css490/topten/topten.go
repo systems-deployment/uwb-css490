@@ -9,8 +9,9 @@ package main
 
 import (
 	"github.com/systems-deployment/uwb-css490/lib/topten"
+	"os"
 )
 
 func main() {
-	topten.TopTen()
+	topten.TopTen(os.Stdin, os.Stdout)
 }

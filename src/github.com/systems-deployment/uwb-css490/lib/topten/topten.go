@@ -10,7 +10,7 @@ package topten
 import (
 	"bufio"
 	"fmt"
-	"os"
+	"io"
 	"regexp"
 	"sort"
 )
@@ -27,8 +27,8 @@ func (w WordsByCount) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
 func (w WordsByCount) Less(i, j int) bool { return counts[w[i]] < counts[w[j]] }
 
 // TopTen: read tex from standard input & output to standard output.
-func TopTen() {
-	buf := bufio.NewReader(os.Stdin)
+func TopTen(in io.Reader, out io.Writer) {
+	buf := bufio.NewReader(in)
 	for line, _, err := buf.ReadLine(); err == nil; line, _, err = buf.ReadLine() {
 		words := punct.Split(string(line), -1)
 		for _, w := range words {
@@ -46,6 +46,6 @@ func TopTen() {
 
 	n := len(words)
 	for i := 10; i > 0; i-- {
-		fmt.Printf("%d\t%s\n", i, words[n-i])
+		fmt.Fprintf(out, "%d\t%s\n", i, words[n-i])
 	}
 }
