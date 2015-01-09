@@ -55,6 +55,6 @@ func TopTen(in io.Reader, out io.Writer) {
 		m = n
 	}
 	for i := m; i > 0; i-- {
-		fmt.Printf("%d\t%s\n", i, counter.Words[n-i])
+		fmt.Fprintf(out, "%d\t%s\n", i, counter.Words[n-i])
 	}
 }
