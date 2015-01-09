@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 )
 
 var (
@@ -28,7 +29,13 @@ func main() {
 		}
 	}
 
-	for w, c := range counts {
-		fmt.Printf("%d\t%s\n", c, w)
+	words := make([]string, 0)
+	for w, _ := range counts {
+		words = append(words, w)
+	}
+	sort.Strings(words)
+
+	for _, w := range words {
+		fmt.Printf("%d\t%s\n", counts[w], w)
 	}
 }
