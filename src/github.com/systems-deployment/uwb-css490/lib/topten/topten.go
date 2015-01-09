@@ -45,7 +45,11 @@ func TopTen(in io.Reader, out io.Writer) {
 	sort.Sort(WordsByCount(words))
 
 	n := len(words)
-	for i := 10; i > 0; i-- {
-		fmt.Fprintf(out, "%d\t%s\n", i, words[n-i])
-	}
+	m := 10
+	if n < 10 {
+		m = n 
+	}   
+	for i := m; i > 0; i-- {
+		fmt.Printf("%d\t%s\n", i, words[n-i])
+	}   
 }
