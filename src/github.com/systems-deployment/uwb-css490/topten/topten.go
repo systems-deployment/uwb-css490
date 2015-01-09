@@ -45,7 +45,11 @@ func main() {
 	sort.Sort(WordsByCount(words))
 
 	n := len(words)
-	for i := 10; i > 0; i-- {
+	m := 10
+	if n < 10 {
+		m = n
+	}
+	for i := m; i > 0; i-- {
 		fmt.Printf("%d\t%s\n", i, words[n-i])
 	}
 }
