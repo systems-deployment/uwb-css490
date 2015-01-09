@@ -10,9 +10,9 @@ package topten
 import (
 	"bufio"
 	"fmt"
+	"github.com/systems-deployment/uwb-css490/lib/wordcounter"
 	"io"
 	"regexp"
-	"sort"
 )
 
 const (
@@ -27,47 +27,34 @@ var (
 	punct = regexp.MustCompile(punctuationPattern)
 )
 
-type wordsByCount struct {
-	words  []string
-	counts map[string]int
-}
-
-func New() *wordsByCount {
-	return &wordsByCount{counts: make(map[string]int)}
-}
-
-func (w *wordsByCount) Len() int           { return len(w.words) }
-func (w *wordsByCount) Swap(i, j int)      { w.words[i], w.words[j] = w.words[j], w.words[i] }
-func (w *wordsByCount) Less(i, j int) bool { return w.counts[w.words[i]] < w.counts[w.words[j]] }
-
 // TopTen: read tex from standard input & output to standard output.
 func TopTen(in io.Reader, out io.Writer) {
 	buf := bufio.NewReader(in)
 
 	punct, _ := regexp.Compile(punctuationPattern)
 
-	counter := New()
+	counter := wordcounter.New()
 
 	for line, _, err := buf.ReadLine(); err == nil; line, _, err = buf.ReadLine() {
 		words := punct.Split(string(line), -1)
 		for _, w := range words {
 			if w != "" {
-				counter.counts[w]++
+				counter.Counts[w]++
 			}
 		}
 	}
 
-	for w, _ := range counter.counts {
-		counter.words = append(counter.words, w)
+	for w, _ := range counter.Counts {
+		counter.Words = append(counter.Words, w)
 	}
-	sort.Sort(counter)
+	counter.Sort()
 
-	n := len(counter.words)
+	n := len(counter.Words)
 	m := 10
 	if n < 10 {
 		m = n
 	}
 	for i := m; i > 0; i-- {
-		fmt.Printf("%d\t%s\n", i, counter.words[n-i])
+		fmt.Printf("%d\t%s\n", i, counter.Words[n-i])
 	}
 }
