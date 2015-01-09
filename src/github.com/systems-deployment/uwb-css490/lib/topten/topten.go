@@ -27,7 +27,7 @@ var (
 	punct = regexp.MustCompile(punctuationPattern)
 )
 
-// TopTen: read tex from standard input & output to standard output.
+// TopTen: read text from standard input & output to standard output.
 func TopTen(in io.Reader, out io.Writer) {
 	buf := bufio.NewReader(in)
 
