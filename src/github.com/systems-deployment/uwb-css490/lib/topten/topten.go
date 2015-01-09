@@ -39,22 +39,20 @@ func TopTen(in io.Reader, out io.Writer) {
 		words := punct.Split(string(line), -1)
 		for _, w := range words {
 			if w != "" {
-				counter.Counts[w]++
+				counter.Incr(w)
 			}
 		}
 	}
 
-	for w, _ := range counter.Counts {
-		counter.Words = append(counter.Words, w)
-	}
 	counter.Sort()
 
-	n := len(counter.Words)
+	n := counter.Len()
 	m := 10
 	if n < 10 {
 		m = n
 	}
 	for i := m; i > 0; i-- {
-		fmt.Fprintf(out, "%d\t%s\n", i, counter.Words[n-i])
+		word, _ := counter.Get(n - i)
+		fmt.Fprintf(out, "%d\t%s\n", i, word)
 	}
 }

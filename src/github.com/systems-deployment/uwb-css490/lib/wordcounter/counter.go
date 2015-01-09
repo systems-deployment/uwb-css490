@@ -6,18 +6,31 @@ import (
 )
 
 type wordCounter struct {
-	Words  []string
-	Counts map[string]int
+	words  []string
+	counts map[string]int
 }
 
 func New() *wordCounter {
-	return &wordCounter{Counts: make(map[string]int)}
+	return &wordCounter{counts: make(map[string]int)}
 }
 
-func (w *wordCounter) Len() int           { return len(w.Words) }
-func (w *wordCounter) Swap(i, j int)      { w.Words[i], w.Words[j] = w.Words[j], w.Words[i] }
-func (w *wordCounter) Less(i, j int) bool { return w.Counts[w.Words[i]] < w.Counts[w.Words[j]] }
+func (w *wordCounter) Len() int           { return len(w.words) }
+func (w *wordCounter) Swap(i, j int)      { w.words[i], w.words[j] = w.words[j], w.words[i] }
+func (w *wordCounter) Less(i, j int) bool { return w.counts[w.words[i]] < w.counts[w.words[j]] }
 
-func (w *wordCounter) Sort() {
-	sort.Sort(w)
+func (this *wordCounter) Incr(word string) {
+	this.counts[word]++
+}
+
+func (this *wordCounter) Sort() {
+	this.words = make([]string, 0)
+	for word, _ := range this.counts {
+		this.words = append(this.words, word)
+	}
+	sort.Sort(this)
+}
+
+func (counter *wordCounter) Get(n int) (string, int) {
+	word := counter.words[n]
+	return word, counter.counts[word]
 }
