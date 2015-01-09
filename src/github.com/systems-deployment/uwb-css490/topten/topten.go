@@ -44,7 +44,8 @@ func main() {
 	}
 	sort.Sort(WordsByCount(words))
 
-	for _, w := range words {
-		fmt.Printf("%d\t%s\n", counts[w], w)
+	n := len(words)
+	for i := 10; i > 0; i-- {
+		fmt.Printf("%d\t%s\n", i, words[n-i])
 	}
 }
