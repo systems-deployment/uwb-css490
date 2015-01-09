@@ -15,41 +15,59 @@ import (
 	"sort"
 )
 
-var (
-	punct  = regexp.MustCompile("[^a-zA-Z]+")
-	counts = make(map[string]int)
+const (
+	punctuationPattern = "[^a-zA-Z]+"
 )
 
-type WordsByCount []string
+var (
+	// Ensure that a syntax error in the regular expression will cause
+	// a panic at program intialization.  Thread-safety of regexps is
+	// unknown, so to be conservative, each instance of TopTen
+	// constructs its own regexp.
+	punct = regexp.MustCompile(punctuationPattern)
+)
 
-func (w WordsByCount) Len() int           { return len(w) }
-func (w WordsByCount) Swap(i, j int)      { w[i], w[j] = w[j], w[i] }
-func (w WordsByCount) Less(i, j int) bool { return counts[w[i]] < counts[w[j]] }
+type wordsByCount struct {
+	words  []string
+	counts map[string]int
+}
+
+func New() *wordsByCount {
+	return &wordsByCount{counts: make(map[string]int)}
+}
+
+func (w *wordsByCount) Len() int           { return len(w.words) }
+func (w *wordsByCount) Swap(i, j int)      { w.words[i], w.words[j] = w.words[j], w.words[i] }
+func (w *wordsByCount) Less(i, j int) bool { return w.counts[w.words[i]] < w.counts[w.words[j]] }
 
 // TopTen: read tex from standard input & output to standard output.
 func TopTen(in io.Reader, out io.Writer) {
 	buf := bufio.NewReader(in)
+
+	punct, _ := regexp.Compile(punctuationPattern)
+
+	counter := New()
+
 	for line, _, err := buf.ReadLine(); err == nil; line, _, err = buf.ReadLine() {
 		words := punct.Split(string(line), -1)
 		for _, w := range words {
 			if w != "" {
-				counts[w]++
+				counter.counts[w]++
 			}
 		}
 	}
 
-	words := make([]string, 0)
-	for w, _ := range counts {
-		words = append(words, w)
+	for w, _ := range counter.counts {
+		counter.words = append(counter.words, w)
 	}
-	sort.Sort(WordsByCount(words))
+	sort.Sort(counter)
 
-	n := len(words)
+	n := len(counter.words)
 	m := 10
 	if n < 10 {
-		m = n 
-	}   
+		m = n
+	}
 	for i := m; i > 0; i-- {
-		fmt.Printf("%d\t%s\n", i, words[n-i])
-	}   
+		fmt.Printf("%d\t%s\n", i, counter.words[n-i])
+	}
 }
