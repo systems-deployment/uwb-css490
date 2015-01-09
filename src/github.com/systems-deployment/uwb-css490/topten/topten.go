@@ -8,10 +8,25 @@
 package main
 
 import (
+	"fmt"
 	"github.com/systems-deployment/uwb-css490/lib/topten"
 	"os"
 )
 
 func main() {
-	topten.TopTen(os.Stdin, os.Stdout)
+	if len(os.Args) < 2 {
+		topten.TopTen(os.Stdin, os.Stdout)
+		return
+	}
+
+	for _, name := range os.Args[1:] {
+		f, err := os.Open(name)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "can't open %s: %s\n", name, err)
+			continue
+		}
+		fmt.Printf("\nTop Ten Words for %s\n", name)
+		topten.TopTen(f, os.Stdout)
+	}
+
 }
