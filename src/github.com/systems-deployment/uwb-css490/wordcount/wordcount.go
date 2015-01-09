@@ -32,7 +32,9 @@ func main() {
 	for line, _, err := buf.ReadLine(); err == nil; line, _, err = buf.ReadLine() {
 		words := punct.Split(string(line), -1)
 		for _, w := range words {
-			counts[w]++
+			if w != "" {
+				counts[w]++
+			}
 		}
 	}
 
