@@ -12,7 +12,7 @@ install:
 	GOPATH=$(GOPATH) go install $(PACKAGES)
 
 test:
-	#GOPATH=$(GOPATH) go test $(TEST_PACKAGES)
+	GOPATH=$(GOPATH) go test $(TEST_PACKAGES)
 
 fmt:
 	GOPATH=$(GOPATH) go fmt $(PACKAGES)
