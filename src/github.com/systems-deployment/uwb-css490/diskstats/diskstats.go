@@ -1,3 +1,8 @@
+// diskstats is a simple demo web server that takes content from the
+// output of an external command.
+//
+// Copyright 2015 Systems Deployment, LLC
+// Author: Morris Bernstein (morris@systems-deployment.com)
 package main
 
 import (
